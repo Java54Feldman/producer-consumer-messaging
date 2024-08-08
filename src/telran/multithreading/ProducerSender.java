@@ -4,6 +4,10 @@ import java.util.concurrent.BlockingQueue;
 import java.util.stream.IntStream;
 
 public class ProducerSender extends Thread {
+	//TODO
+	//dispatching functionality
+	//two message boxes
+	
 	private BlockingQueue<String> messageBox;
 	private int nMessages;
 	public ProducerSender(BlockingQueue<String> messageBox, int nMessages) {

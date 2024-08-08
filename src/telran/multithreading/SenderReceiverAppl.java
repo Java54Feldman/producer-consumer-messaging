@@ -5,6 +5,11 @@ import java.util.concurrent.*;
 import java.util.stream.IntStream;
 
 public class SenderReceiverAppl {
+	//TODO
+	//Provide functionality of dispatching
+	//Even messages must be processed by receiver threads with even id
+	//Odd messages must be processed by receiver threads with odd id
+	//Hints two message boxes
 
 	private static final int N_MESSAGES = 2_000;
 	private static final int N_RECEIVERS = 10;
