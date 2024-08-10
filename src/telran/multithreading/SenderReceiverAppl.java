@@ -19,7 +19,6 @@ public class SenderReceiverAppl {
 		ProducerSender sender = startSender(messageBox, N_MESSAGES);
 		ConsumerReceiver[] receivers = startReceivers(messageBox, N_RECEIVERS);
 		sender.join();
-		Thread.sleep(200);
 		stopReceivers(receivers);
 		displayResult();
 	}
