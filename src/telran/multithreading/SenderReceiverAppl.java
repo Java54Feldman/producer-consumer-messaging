@@ -5,7 +5,6 @@ import java.util.concurrent.*;
 import java.util.stream.IntStream;
 
 public class SenderReceiverAppl {
-	//TODO
 	//Provide functionality of dispatching
 	//Even messages must be processed by receiver threads with even id
 	//Odd messages must be processed by receiver threads with odd id
@@ -15,9 +14,10 @@ public class SenderReceiverAppl {
 	private static final int N_RECEIVERS = 10;
 
 	public static void main(String[] args) throws InterruptedException {
-		BlockingQueue<String> messageBox = new LinkedBlockingQueue<String>();
-		ProducerSender sender = startSender(messageBox, N_MESSAGES);
-		ConsumerReceiver[] receivers = startReceivers(messageBox, N_RECEIVERS);
+		BlockingQueue<String> messageBoxEven = new LinkedBlockingQueue<String>();
+		BlockingQueue<String> messageBoxOdd = new LinkedBlockingQueue<String>();
+		ProducerSender sender = startSender(messageBoxEven, messageBoxOdd, N_MESSAGES);
+		ConsumerReceiver[] receivers = startReceivers(messageBoxEven, messageBoxOdd, N_RECEIVERS);
 		sender.join();
 		stopReceivers(receivers);
 		displayResult();
@@ -36,21 +36,22 @@ public class SenderReceiverAppl {
 		
 	}
 
-	private static ConsumerReceiver[] startReceivers(BlockingQueue<String> messageBox, 
-			int nReceivers) {
+	private static ConsumerReceiver[] startReceivers(BlockingQueue<String> messageBoxEven, 
+			BlockingQueue<String> messageBoxOdd, int nReceivers) {
 		ConsumerReceiver[] receivers =
 		IntStream.range(0, nReceivers).mapToObj(i -> {
 			ConsumerReceiver receiver = new ConsumerReceiver();
-			receiver.setMessageBox(messageBox);
+			receiver.setMessageBox(messageBoxEven, messageBoxOdd);
 			return receiver;
 		}).toArray(ConsumerReceiver[]::new);
 		Arrays.stream(receivers).forEach(ConsumerReceiver::start);
 		return receivers;
 	}
 
-	private static ProducerSender startSender(BlockingQueue<String> messageBox, 
+	private static ProducerSender startSender(BlockingQueue<String> messageBoxEven, 
+			BlockingQueue<String> messageBoxOdd, 
 			int nMessages) {
-		ProducerSender sender = new ProducerSender(messageBox, nMessages);
+		ProducerSender sender = new ProducerSender(messageBoxEven, messageBoxOdd, nMessages);
 		sender.start();
 		return sender;
 	}
