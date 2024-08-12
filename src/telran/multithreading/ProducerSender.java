@@ -19,12 +19,9 @@ public class ProducerSender extends Thread {
 		IntStream.rangeClosed(1, nMessages)
 		.forEach(i -> {
 			try {
-				String message = "message" + i;
-				if(i % 2 == 0) {
-					messageBoxEven.put(message);
-				} else {
-					messageBoxOdd.put(message);
-				}
+				BlockingQueue<String> messageBox = null;
+				messageBox = i % 2 == 0 ? messageBoxEven : messageBoxOdd;
+				messageBox.put("message" + i);
 			} catch (InterruptedException e) {
 				// no interrupt
 			}

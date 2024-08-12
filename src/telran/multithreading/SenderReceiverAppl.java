@@ -37,11 +37,12 @@ public class SenderReceiverAppl {
 	}
 
 	private static ConsumerReceiver[] startReceivers(BlockingQueue<String> messageBoxEven, 
-			BlockingQueue<String> messageBoxOdd, int nReceivers) {
+			BlockingQueue<String> messageBoxOdd, 
+			int nReceivers) {
 		ConsumerReceiver[] receivers =
 		IntStream.range(0, nReceivers).mapToObj(i -> {
 			ConsumerReceiver receiver = new ConsumerReceiver();
-			receiver.setMessageBox(messageBoxEven, messageBoxOdd);
+			receiver.setMessageBox(receiver.getId() % 2 == 0 ? messageBoxEven : messageBoxOdd);
 			return receiver;
 		}).toArray(ConsumerReceiver[]::new);
 		Arrays.stream(receivers).forEach(ConsumerReceiver::start);
@@ -49,8 +50,7 @@ public class SenderReceiverAppl {
 	}
 
 	private static ProducerSender startSender(BlockingQueue<String> messageBoxEven, 
-			BlockingQueue<String> messageBoxOdd, 
-			int nMessages) {
+			BlockingQueue<String> messageBoxOdd, int nMessages) {
 		ProducerSender sender = new ProducerSender(messageBoxEven, messageBoxOdd, nMessages);
 		sender.start();
 		return sender;
